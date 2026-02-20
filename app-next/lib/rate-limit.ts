@@ -40,6 +40,7 @@ export const RATE_LIMITS = {
   resetPassword: { points: 5, duration: 900 },
   verifyEmail: { points: 5, duration: 900 },
   resendVerification: { points: 3, duration: 3600 },
+  newsletter: { points: 3, duration: 3600 },
 } as const satisfies Record<string, RateLimitConfig>
 
 export async function rateLimit(

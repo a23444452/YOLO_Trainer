@@ -3,8 +3,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Zap, User, Download, LogOut } from 'lucide-react';
+import { Menu, X, User, Download, LogOut } from 'lucide-react';
 import { gsap } from '@/lib/gsap'
 
 export function Navigation() {
@@ -69,9 +70,7 @@ export function Navigation() {
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => scrollToSection('hero')}
         >
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
-            <Zap className="w-5 h-5 text-white" />
-          </div>
+          <Image src="/logo.svg" alt="YOLO Trainer" width={32} height={32} className="w-8 h-8" />
           <span className="font-display font-bold text-lg tracking-wide text-white">
             YOLO TRAINER
           </span>

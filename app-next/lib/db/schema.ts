@@ -58,5 +58,16 @@ export type User = typeof users.$inferSelect
 export type NewUser = typeof users.$inferInsert
 export type Subscription = typeof subscriptions.$inferSelect
 export type NewSubscription = typeof subscriptions.$inferInsert
+export const newsletterSubscribers = pgTable('newsletter_subscribers', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  email: text('email').notNull().unique(),
+  subscribedAt: timestamp('subscribed_at').defaultNow().notNull(),
+  unsubscribedAt: timestamp('unsubscribed_at'),
+}, (table) => [
+  index('idx_newsletter_email').on(table.email),
+])
+
 export type ContactSubmission = typeof contactSubmissions.$inferSelect
 export type NewContactSubmission = typeof contactSubmissions.$inferInsert
+export type NewsletterSubscriber = typeof newsletterSubscribers.$inferSelect
+export type NewNewsletterSubscriber = typeof newsletterSubscribers.$inferInsert
