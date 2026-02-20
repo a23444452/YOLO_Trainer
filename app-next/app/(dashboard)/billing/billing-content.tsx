@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { Check, Cpu, Zap, Rocket, Loader2, ExternalLink } from 'lucide-react'
+import { Check, Cpu, Zap, Rocket, Loader2, ExternalLink, AlertCircle } from 'lucide-react'
 import type { SubscriptionInfo, PlanName } from '@/types/stripe'
 
 const plans: Array<{
@@ -81,6 +81,12 @@ export function BillingContent() {
   const [isLoading, setIsLoading] = useState(true)
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null)
   const [portalLoading, setPortalLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  const showError = useCallback((message: string) => {
+    setErrorMessage(message)
+    setTimeout(() => setErrorMessage(null), 5000)
+  }, [])
 
   const success = searchParams.get('success')
   const canceled = searchParams.get('canceled')
@@ -107,6 +113,7 @@ export function BillingContent() {
     if (planId === 'free') return
 
     setCheckoutLoading(planId)
+    setErrorMessage(null)
     try {
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
@@ -115,11 +122,15 @@ export function BillingContent() {
       })
 
       const data = await res.json()
+      if (!res.ok) {
+        showError(data.error ?? '建立結帳連結失敗，請稍後再試')
+        return
+      }
       if (data.url) {
         window.location.href = data.url
       }
     } catch {
-      // Error handled silently
+      showError('網路連線異常，請檢查網路後再試')
     } finally {
       setCheckoutLoading(null)
     }
@@ -127,14 +138,19 @@ export function BillingContent() {
 
   const handlePortal = async () => {
     setPortalLoading(true)
+    setErrorMessage(null)
     try {
       const res = await fetch('/api/stripe/portal', { method: 'POST' })
       const data = await res.json()
+      if (!res.ok) {
+        showError(data.error ?? '建立管理連結失敗，請稍後再試')
+        return
+      }
       if (data.url) {
         window.location.href = data.url
       }
     } catch {
-      // Error handled silently
+      showError('網路連線異常，請檢查網路後再試')
     } finally {
       setPortalLoading(false)
     }
@@ -172,6 +188,15 @@ export function BillingContent() {
             <p className="text-yellow-400 text-center">
               結帳已取消。你可以隨時重新選擇方案。
             </p>
+          </CardContent>
+        </Card>
+      )}
+
+      {errorMessage && (
+        <Card className="border-red-500/50 bg-red-500/10">
+          <CardContent className="pt-6 flex items-center justify-center gap-2">
+            <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
+            <p className="text-red-400 text-center">{errorMessage}</p>
           </CardContent>
         </Card>
       )}

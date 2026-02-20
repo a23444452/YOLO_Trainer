@@ -4,6 +4,7 @@ import {
   text,
   timestamp,
   boolean,
+  index,
 } from 'drizzle-orm/pg-core'
 
 export const users = pgTable('users', {
@@ -15,7 +16,10 @@ export const users = pgTable('users', {
   stripeCustomerId: text('stripe_customer_id').unique(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
-})
+}, (table) => [
+  index('idx_users_email').on(table.email),
+  index('idx_users_stripe_customer_id').on(table.stripeCustomerId),
+])
 
 export const subscriptions = pgTable('subscriptions', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -29,7 +33,11 @@ export const subscriptions = pgTable('subscriptions', {
   currentPeriodEnd: timestamp('current_period_end').notNull(),
   cancelAtPeriodEnd: boolean('cancel_at_period_end').default(false).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
-})
+}, (table) => [
+  index('idx_subscriptions_user_id').on(table.userId),
+  index('idx_subscriptions_stripe_subscription_id').on(table.stripeSubscriptionId),
+  index('idx_subscriptions_status').on(table.status),
+])
 
 export const contactSubmissions = pgTable('contact_submissions', {
   id: uuid('id').primaryKey().defaultRandom(),

@@ -4,8 +4,12 @@ import { eq } from 'drizzle-orm'
 import { registerSchema } from '@/lib/validations/auth'
 import { db } from '@/lib/db'
 import { users } from '@/lib/db/schema'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(req: Request) {
+  const limited = await rateLimit(req, 'register')
+  if (limited) return limited
+
   try {
     const body = await req.json()
     const validated = registerSchema.safeParse(body)

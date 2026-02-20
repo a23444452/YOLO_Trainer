@@ -1,11 +1,15 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { getStripe } from '@/lib/stripe'
 import { db } from '@/lib/db'
 import { users } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
+import { rateLimit } from '@/lib/rate-limit'
 
-export async function POST() {
+export async function POST(req: NextRequest) {
+  const limited = await rateLimit(req, 'portal')
+  if (limited) return limited
+
   try {
     const session = await auth()
 

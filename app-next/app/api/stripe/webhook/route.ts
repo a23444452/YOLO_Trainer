@@ -4,8 +4,12 @@ import { db } from '@/lib/db'
 import { users, subscriptions } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 import type Stripe from 'stripe'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(req: NextRequest) {
+  const limited = await rateLimit(req, 'webhook')
+  if (limited) return limited
+
   const body = await req.text()
   const signature = req.headers.get('stripe-signature')
 

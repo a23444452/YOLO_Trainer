@@ -1,11 +1,15 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { subscriptions } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 import type { SubscriptionInfo } from '@/types/stripe'
+import { rateLimit } from '@/lib/rate-limit'
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const limited = await rateLimit(req, 'subscription')
+  if (limited) return limited
+
   try {
     const session = await auth()
 

@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
+vi.mock('@/lib/rate-limit', () => ({
+  rateLimit: vi.fn().mockResolvedValue(null),
+}))
+
 vi.mock('bcryptjs', () => ({
   hash: vi.fn().mockResolvedValue('$2b$10$hashedpassword'),
 }))

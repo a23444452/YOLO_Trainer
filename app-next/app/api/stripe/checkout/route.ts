@@ -5,8 +5,12 @@ import { checkoutSchema } from '@/lib/validations/stripe'
 import { db } from '@/lib/db'
 import { users } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(req: NextRequest) {
+  const limited = await rateLimit(req, 'checkout')
+  if (limited) return limited
+
   try {
     const session = await auth()
 

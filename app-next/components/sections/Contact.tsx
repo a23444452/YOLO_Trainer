@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react';
-import { Mail, MapPin, Send, CheckCircle } from 'lucide-react';
+import { Mail, MapPin, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,6 +11,7 @@ import { gsap, ScrollTrigger } from '@/lib/gsap'
 export function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -87,6 +88,8 @@ export function Contact() {
       message: formData.get('message') as string,
     };
 
+    setErrorMsg(null);
+
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
@@ -95,7 +98,10 @@ export function Contact() {
       });
 
       if (!res.ok) {
-        throw new Error('送出失敗');
+        const result = await res.json().catch(() => null);
+        const message = result?.error ?? '送出失敗，請稍後再試';
+        setErrorMsg(message);
+        return;
       }
 
       setIsSubmitted(true);
@@ -105,7 +111,7 @@ export function Contact() {
         setIsSubmitted(false);
       }, 3000);
     } catch {
-      // Silently handle error
+      setErrorMsg('網路連線異常，請檢查網路後再試');
     } finally {
       setIsSubmitting(false);
     }
@@ -245,6 +251,13 @@ export function Contact() {
                 className="bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-orange-500 focus:ring-orange-500/20 resize-none"
               />
             </div>
+
+            {errorMsg && (
+              <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
+                <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
+                <p className="text-red-400 text-sm">{errorMsg}</p>
+              </div>
+            )}
 
             <Button
               type="submit"
