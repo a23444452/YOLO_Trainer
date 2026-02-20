@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -5,6 +6,11 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { Cpu, Zap, Rocket } from 'lucide-react'
 import type { SubscriptionTier } from '@/types/auth'
+
+export const metadata: Metadata = {
+  title: '儀表板',
+  description: '管理你的 YOLO Trainer 帳號、訓練任務和訂閱方案。',
+}
 
 const tierConfig: Record<SubscriptionTier, { icon: typeof Cpu; label: string; color: string }> = {
   free: { icon: Cpu, label: 'Free', color: 'text-gray-400' },

@@ -1,5 +1,11 @@
+import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { BillingContent } from './billing-content'
+
+export const metadata: Metadata = {
+  title: '方案管理',
+  description: '管理你的 YOLO Trainer 訂閱方案和付款資訊。',
+}
 
 export default function BillingPage() {
   return (

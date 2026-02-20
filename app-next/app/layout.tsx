@@ -17,9 +17,57 @@ const oswald = Oswald({
   display: 'swap',
 })
 
+const siteUrl = process.env.NEXTAUTH_URL ?? 'https://yolotrainer.com'
+
 export const metadata: Metadata = {
-  title: 'YOLO Trainer - No-Code AI Training Platform',
-  description: 'Train YOLO object detection models locally without coding. Download the free desktop app for Windows, macOS, and Linux.',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'YOLO Trainer - No-Code AI Training Platform',
+    template: '%s | YOLO Trainer',
+  },
+  description:
+    '免寫程式訓練 YOLO 物件偵測模型。支援 YOLOv5 / YOLOv8 / YOLOv11，提供自動標註、資料增強、模型匯出等全流程 AI 訓練工具。免費下載桌面應用程式。',
+  keywords: [
+    'YOLO', 'YOLOv8', 'YOLOv11', '物件偵測', 'AI 訓練',
+    'No-Code', '自動標註', '深度學習', 'Object Detection',
+    'Machine Learning', 'Computer Vision',
+  ],
+  authors: [{ name: 'YOLO Trainer Team' }],
+  openGraph: {
+    type: 'website',
+    locale: 'zh_TW',
+    url: siteUrl,
+    siteName: 'YOLO Trainer',
+    title: 'YOLO Trainer - No-Code AI 物件偵測訓練平台',
+    description:
+      '免寫程式訓練 YOLO 物件偵測模型。支援 YOLOv5 / YOLOv8 / YOLOv11，提供全流程 AI 訓練工具。',
+    images: [
+      {
+        url: '/images/hero-dashboard.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'YOLO Trainer Dashboard',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'YOLO Trainer - No-Code AI 物件偵測訓練平台',
+    description:
+      '免寫程式訓練 YOLO 物件偵測模型。支援 YOLOv5 / YOLOv8 / YOLOv11。',
+    images: ['/images/hero-dashboard.jpg'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 }
 
 export default function RootLayout({
