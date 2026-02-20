@@ -1,0 +1,155 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800&family=Oswald:wght@200;300;400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 91%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 91%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 91%;
+    --primary: 27 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 91%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 27 100% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 27 100% 50%;
+    --radius: 0.625rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter Tight', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Oswald', sans-serif;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#FF7B00] to-[#FF9A44];
+  }
+  
+  .glow-orange {
+    box-shadow: 0 0 20px rgba(255, 123, 0, 0.3), 0 0 40px rgba(255, 123, 0, 0.1);
+  }
+  
+  .glow-orange-strong {
+    box-shadow: 0 0 30px rgba(255, 123, 0, 0.5), 0 0 60px rgba(255, 123, 0, 0.2);
+  }
+  
+  .border-glow {
+    position: relative;
+  }
+  
+  .border-glow::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: conic-gradient(from 0deg, #FF7B00, #FF9A44, #FF7B00);
+    animation: rotate 4s linear infinite;
+    z-index: -1;
+  }
+  
+  .glass {
+    @apply backdrop-blur-xl bg-white/5 border border-white/10;
+  }
+  
+  .glass-dark {
+    @apply backdrop-blur-xl bg-black/40 border border-white/5;
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 123, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 123, 0, 0.6);
+  }
+}
+
+@keyframes grid-breathe {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+.animate-grid-breathe {
+  animation: grid-breathe 4s ease-in-out infinite;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1A1A1A;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF7B00;
+}
+
+/* Selection */
+::selection {
+  background: rgba(255, 123, 0, 0.3);
+  color: #fff;
+}
