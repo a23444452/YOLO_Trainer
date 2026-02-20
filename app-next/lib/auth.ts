@@ -16,7 +16,7 @@ async function getTierForUser(userId: string): Promise<SubscriptionTier> {
     .where(eq(subscriptions.userId, userId))
     .limit(1)
 
-  if (!sub || sub.status !== 'active') return 'free'
+  if (!sub || !['active', 'trialing'].includes(sub.status)) return 'free'
 
   const proPriceId = process.env.STRIPE_PRO_PRICE_ID
   const enterprisePriceId = process.env.STRIPE_ENTERPRISE_PRICE_ID

@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
       .where(eq(subscriptions.userId, session.user.id))
       .limit(1)
 
-    if (!sub || sub.status !== 'active') {
+    if (!sub || !['active', 'trialing'].includes(sub.status)) {
       const info: SubscriptionInfo = {
         plan: 'free',
         status: 'active',

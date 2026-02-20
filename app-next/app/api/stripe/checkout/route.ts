@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { getStripe } from '@/lib/stripe'
+import { getStripe, getAllowedPriceIds } from '@/lib/stripe'
 import { checkoutSchema } from '@/lib/validations/stripe'
 import { db } from '@/lib/db'
 import { users } from '@/lib/db/schema'
@@ -32,6 +32,15 @@ export async function POST(req: NextRequest) {
     }
 
     const { priceId } = validated.data
+
+    const allowedPriceIds = getAllowedPriceIds()
+    if (!allowedPriceIds.includes(priceId)) {
+      return NextResponse.json(
+        { error: '無效的方案' },
+        { status: 400 }
+      )
+    }
+
     const stripe = getStripe()
 
     const [dbUser] = await db

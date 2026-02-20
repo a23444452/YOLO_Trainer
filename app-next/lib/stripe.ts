@@ -39,3 +39,9 @@ export const PLANS = {
     priceId: process.env.STRIPE_ENTERPRISE_PRICE_ID ?? '',
   },
 } as const
+
+export function getAllowedPriceIds(): string[] {
+  return [PLANS.pro.priceId, PLANS.enterprise.priceId].filter(
+    (id): id is string => typeof id === 'string' && id.length > 0
+  )
+}

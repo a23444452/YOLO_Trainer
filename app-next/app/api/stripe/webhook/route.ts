@@ -55,6 +55,21 @@ export async function POST(req: NextRequest) {
         await handleSubscriptionDeleted(subscription)
         break
       }
+      case 'checkout.session.completed': {
+        const session = event.data.object as Stripe.Checkout.Session
+        await handleCheckoutCompleted(session)
+        break
+      }
+      case 'invoice.payment_succeeded': {
+        const invoice = event.data.object as Stripe.Invoice
+        console.log('Invoice paid:', invoice.id, 'customer:', invoice.customer)
+        break
+      }
+      case 'invoice.payment_failed': {
+        const invoice = event.data.object as Stripe.Invoice
+        console.error('Invoice payment failed:', invoice.id, 'customer:', invoice.customer)
+        break
+      }
       default:
         break
     }
@@ -118,4 +133,17 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     .update(subscriptions)
     .set({ status: 'canceled' })
     .where(eq(subscriptions.stripeSubscriptionId, subscription.id))
+}
+
+async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
+  const customerId = session.customer as string | null
+  const userId = session.metadata?.userId
+
+  if (!userId || !customerId) return
+
+  // Ensure user↔Stripe customer mapping is saved
+  await db
+    .update(users)
+    .set({ stripeCustomerId: customerId, updatedAt: new Date() })
+    .where(eq(users.id, userId))
 }
