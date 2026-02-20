@@ -122,7 +122,12 @@ export function LoginForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">密碼</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="password">密碼</Label>
+              <Link href="/forgot-password" className="text-xs text-muted-foreground hover:text-primary">
+                忘記密碼？
+              </Link>
+            </div>
             <Input
               id="password"
               type="password"

@@ -15,5 +15,20 @@ export const registerSchema = z.object({
   path: ['confirmPassword'],
 })
 
+export const forgotPasswordSchema = z.object({
+  email: z.string().email('請輸入有效的 Email'),
+})
+
+export const resetPasswordSchema = z.object({
+  token: z.string().min(1, 'Token 不可為空'),
+  password: z.string().min(8, '密碼至少 8 個字元'),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: '密碼不一致',
+  path: ['confirmPassword'],
+})
+
 export type LoginInput = z.infer<typeof loginSchema>
 export type RegisterInput = z.infer<typeof registerSchema>
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>

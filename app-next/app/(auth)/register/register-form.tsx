@@ -47,19 +47,8 @@ export function RegisterForm() {
         return
       }
 
-      const result = await signIn('credentials', {
-        email: data.email,
-        password: data.password,
-        redirect: false,
-      })
-
-      if (result?.error) {
-        router.push('/login')
-        return
-      }
-
-      router.push('/')
-      router.refresh()
+      // Redirect to verify email page instead of auto-login
+      router.push('/verify-email')
     } catch {
       setError('註冊失敗，請稍後再試')
     }

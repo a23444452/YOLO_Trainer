@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Download, Play, Monitor } from 'lucide-react';
 import { gsap } from '@/lib/gsap'
@@ -283,10 +284,13 @@ export function Hero() {
               <div className="absolute -inset-4 bg-gradient-to-r from-orange-500/20 to-orange-600/20 rounded-3xl blur-2xl animate-pulse-glow" />
 
               <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-                <img
+                <Image
                   src="/images/training.png"
                   alt="YOLO Training Dashboard"
+                  width={1200}
+                  height={800}
                   className="w-full h-auto"
+                  priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
               </div>

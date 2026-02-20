@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server'
 import { hash } from 'bcryptjs'
+import { randomBytes } from 'crypto'
 import { eq } from 'drizzle-orm'
 import { registerSchema } from '@/lib/validations/auth'
 import { db } from '@/lib/db'
 import { users } from '@/lib/db/schema'
+import { sendVerificationEmail } from '@/lib/email'
 import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(req: Request) {
@@ -37,6 +39,8 @@ export async function POST(req: Request) {
     }
 
     const hashedPassword = await hash(password, 12)
+    const verificationToken = randomBytes(32).toString('hex')
+    const verificationTokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
 
     const [newUser] = await db
       .insert(users)
@@ -44,11 +48,19 @@ export async function POST(req: Request) {
         name,
         email,
         hashedPassword,
+        verificationToken,
+        verificationTokenExpiry,
       })
       .returning({ id: users.id, email: users.email })
 
+    try {
+      await sendVerificationEmail(email, verificationToken)
+    } catch (emailError) {
+      console.error('Failed to send verification email:', emailError)
+    }
+
     return NextResponse.json(
-      { message: '註冊成功', user: { id: newUser.id, email: newUser.email } },
+      { message: '註冊成功，請查收驗證信', user: { id: newUser.id, email: newUser.email } },
       { status: 201 }
     )
   } catch (error) {

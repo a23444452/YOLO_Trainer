@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { ChevronLeft, ChevronRight, Video, Image as ImageIcon, Monitor } from 'lucide-react';
 import { gsap, ScrollTrigger } from '@/lib/gsap'
 
@@ -140,10 +141,13 @@ export function DemoGallery() {
           <div className="lg:col-span-2">
             <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-black/50">
               <div className="aspect-video relative">
-                <img
+                <Image
                   src={currentItem.thumbnail}
                   alt={currentItem.title}
+                  width={960}
+                  height={540}
                   className="w-full h-full object-cover"
+                  priority
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -187,9 +191,11 @@ export function DemoGallery() {
                       : 'border-white/10 hover:border-white/30'}
                   `}
                 >
-                  <img
+                  <Image
                     src={item.thumbnail}
                     alt={item.title}
+                    width={96}
+                    height={64}
                     className="w-full h-full object-cover"
                   />
                 </button>

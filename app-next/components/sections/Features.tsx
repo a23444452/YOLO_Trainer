@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Tag,
@@ -207,9 +208,11 @@ export function Features() {
               <div className="absolute -inset-4 bg-gradient-to-r from-orange-500/10 to-orange-600/10 rounded-3xl blur-2xl" />
 
               <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-                <img
+                <Image
                   src={activeFeature.image}
                   alt={activeFeature.title}
+                  width={960}
+                  height={640}
                   className="w-full h-auto transition-transform duration-700 hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />

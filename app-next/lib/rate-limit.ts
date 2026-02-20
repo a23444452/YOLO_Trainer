@@ -36,6 +36,10 @@ export const RATE_LIMITS = {
   portal: { points: 10, duration: 3600 },
   subscription: { points: 30, duration: 60 },
   webhook: { points: 100, duration: 60 },
+  forgotPassword: { points: 3, duration: 3600 },
+  resetPassword: { points: 5, duration: 900 },
+  verifyEmail: { points: 5, duration: 900 },
+  resendVerification: { points: 3, duration: 3600 },
 } as const satisfies Record<string, RateLimitConfig>
 
 export async function rateLimit(
